@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>MesaZap — Pedidos do Restaurante</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <p class="eyebrow">MVP</p>
+      <h1>MesaZap</h1>
+      <p class="subtitle">Anote pedidos, acompanhe status e envie confirmação pelo WhatsApp.</p>
+    </div>
+    <div class="stats">
+      <span><strong id="openCount">0</strong> abertos</span>
+      <span><strong id="todayTotal">R$ 0,00</strong> hoje</span>
+    </div>
+  </header>
+
+  <main class="layout">
+    <section class="card form-card">
+      <h2>Novo pedido</h2>
+      <form id="orderForm">
+        <label>Cliente
+          <input id="customer" placeholder="Ex: Mesa 4 / Danilo" required />
+        </label>
+        <label>WhatsApp
+          <input id="phone" placeholder="Ex: 11999999999" />
+        </label>
+        <label>Tipo
+          <select id="type">
+            <option>Salão</option>
+            <option>Retirada</option>
+            <option>Delivery</option>
+          </select>
+        </label>
+        <label>Itens do pedido
+          <textarea id="items" rows="6" placeholder="1x Parmigiana\n2x Coca lata\nSem cebola" required></textarea>
+        </label>
+        <div class="row">
+          <label>Total R$
+            <input id="total" type="number" min="0" step="0.01" placeholder="0,00" />
+          </label>
+          <label>Pagamento
+            <select id="payment">
+              <option>Não informado</option>
+              <option>Pix</option>
+              <option>Cartão</option>
+              <option>Dinheiro</option>
+            </select>
+          </label>
+        </div>
+        <label>Observações
+          <input id="notes" placeholder="Ex: troco para 100, sem talher" />
+        </label>
+        <button type="submit">Adicionar pedido</button>
+      </form>
+    </section>
+
+    <section class="board">
+      <div class="board-header">
+        <h2>Pedidos</h2>
+        <div class="filters">
+          <button class="filter active" data-filter="all">Todos</button>
+          <button class="filter" data-filter="Novo">Novos</button>
+          <button class="filter" data-filter="Preparando">Preparando</button>
+          <button class="filter" data-filter="Pronto">Prontos</button>
+        </div>
+      </div>
+      <div id="orders" class="orders"></div>
+    </section>
+  </main>
+
+  <template id="orderTemplate">
+    <article class="order card">
+      <div class="order-head">
+        <div>
+          <strong class="customer"></strong>
+          <span class="meta"></span>
+        </div>
+        <span class="badge"></span>
+      </div>
+      <pre class="items"></pre>
+      <p class="notes"></p>
+      <div class="order-footer">
+        <strong class="total"></strong>
+        <div class="actions">
+          <button data-action="copy">Copiar</button>
+          <button data-action="whatsapp">WhatsApp</button>
+          <button data-action="next" class="primary">Avançar</button>
+          <button data-action="delete" class="danger">Excluir</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="app.js"></script>
+</body>
+</html>
