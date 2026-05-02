@@ -11,23 +11,26 @@
     <div>
       <p class="eyebrow">MVP</p>
       <h1>MesaZap</h1>
-      <p class="subtitle">Anote pedidos, acompanhe status e envie confirmação pelo WhatsApp.</p>
+      <p class="subtitle">Atendimento lança pedidos. Cozinha recebe a fila e controla o preparo.</p>
     </div>
     <div class="stats">
       <span><strong id="openCount">0</strong> abertos</span>
+      <span><strong id="kitchenCount">0</strong> na cozinha</span>
       <span><strong id="todayTotal">R$ 0,00</strong> hoje</span>
     </div>
   </header>
 
-  <main class="layout">
+  <nav class="tabs" aria-label="Áreas do sistema">
+    <button class="tab active" data-view="front">Atendimento</button>
+    <button class="tab" data-view="kitchen">Cozinha</button>
+  </nav>
+
+  <main id="frontView" class="layout view active">
     <section class="card form-card">
       <h2>Novo pedido</h2>
       <form id="orderForm">
-        <label>Cliente
+        <label>Cliente / mesa
           <input id="customer" placeholder="Ex: Mesa 4 / Danilo" required />
-        </label>
-        <label>WhatsApp
-          <input id="phone" placeholder="Ex: 11999999999" />
         </label>
         <label>Tipo
           <select id="type">
@@ -52,16 +55,16 @@
             </select>
           </label>
         </div>
-        <label>Observações
-          <input id="notes" placeholder="Ex: troco para 100, sem talher" />
+        <label>Observações para cozinha/atendimento
+          <input id="notes" placeholder="Ex: sem cebola, ponto da carne, sem talher" />
         </label>
-        <button type="submit">Adicionar pedido</button>
+        <button type="submit">Enviar para cozinha</button>
       </form>
     </section>
 
     <section class="board">
       <div class="board-header">
-        <h2>Pedidos</h2>
+        <h2>Pedidos do atendimento</h2>
         <div class="filters">
           <button class="filter active" data-filter="all">Todos</button>
           <button class="filter" data-filter="Novo">Novos</button>
@@ -71,6 +74,31 @@
       </div>
       <div id="orders" class="orders"></div>
     </section>
+  </main>
+
+  <main id="kitchenView" class="kitchen view">
+    <section class="kitchen-header card">
+      <div>
+        <p class="eyebrow">Fila da cozinha</p>
+        <h2>Pedidos para preparar</h2>
+        <p class="subtitle">Mostra pedidos novos e em preparo. Quando finalizar, marque como pronto.</p>
+      </div>
+      <button id="clearDelivered" class="danger">Limpar entregues</button>
+    </section>
+    <div class="kitchen-columns">
+      <section>
+        <h3>Novos</h3>
+        <div id="newKitchenOrders" class="kitchen-list"></div>
+      </section>
+      <section>
+        <h3>Preparando</h3>
+        <div id="preparingKitchenOrders" class="kitchen-list"></div>
+      </section>
+      <section>
+        <h3>Prontos</h3>
+        <div id="readyKitchenOrders" class="kitchen-list"></div>
+      </section>
+    </div>
   </main>
 
   <template id="orderTemplate">
@@ -88,10 +116,28 @@
         <strong class="total"></strong>
         <div class="actions">
           <button data-action="copy">Copiar</button>
-          <button data-action="whatsapp">WhatsApp</button>
           <button data-action="next" class="primary">Avançar</button>
           <button data-action="delete" class="danger">Excluir</button>
         </div>
+      </div>
+    </article>
+  </template>
+
+  <template id="kitchenTemplate">
+    <article class="kitchen-ticket card">
+      <div class="order-head">
+        <div>
+          <strong class="customer"></strong>
+          <span class="meta"></span>
+        </div>
+        <span class="badge"></span>
+      </div>
+      <pre class="items"></pre>
+      <p class="notes"></p>
+      <div class="actions kitchen-actions">
+        <button data-action="prepare" class="primary">Começar preparo</button>
+        <button data-action="ready" class="primary">Marcar pronto</button>
+        <button data-action="delivered">Entregue</button>
       </div>
     </article>
   </template>

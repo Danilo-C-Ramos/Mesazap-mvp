@@ -1,14 +1,25 @@
 # MesaZap — MVP de pedidos para restaurante
 
-MVP simples para restaurante que hoje anota pedidos no WhatsApp.
+MVP simples para restaurante que hoje anota pedidos manualmente e precisa organizar atendimento + cozinha.
 
 ## O que faz
 
-- Cadastro rápido de pedido: cliente/mesa, WhatsApp, tipo, itens, total, pagamento e observações.
-- Kanban/lista com status: Novo → Preparando → Pronto → Entregue.
+- Atendimento cadastra pedidos por cliente/mesa, tipo, itens, total, pagamento e observações.
+- Campo de WhatsApp removido da tela de registro para acelerar o lançamento.
+- Tela **Cozinha** com fila separada:
+  - Novos
+  - Preparando
+  - Prontos
+- Cozinha consegue avançar o pedido: `Começar preparo` → `Marcar pronto` → `Entregue`.
+- Atendimento acompanha status: `Novo → Preparando → Pronto → Entregue`.
 - Copiar resumo do pedido.
-- Abrir WhatsApp com mensagem pronta para o cliente.
 - Salva os pedidos no navegador via `localStorage`.
+
+## Como acessar publicado
+
+GitHub Pages:
+
+https://danilo-c-ramos.github.io/Mesazap-mvp/
 
 ## Como rodar localmente
 
@@ -25,14 +36,15 @@ Depois acesse: `http://localhost:8080`
 ## Limitações do MVP
 
 - Dados ficam só no navegador usado.
-- Não tem login, impressão, multi-atendente ou banco online.
-- Não integra automaticamente com WhatsApp Business API.
+- A tela da cozinha funciona no mesmo navegador/dispositivo nesta versão.
+- Para atendimento e cozinha usarem dispositivos diferentes, precisa backend/banco online.
+- Não tem login, impressão, multi-atendente ou integração oficial WhatsApp Business API.
 
 ## Próximo passo para virar produto real
 
-1. Publicar frontend.
-2. Adicionar backend e banco: Supabase/Firebase.
+1. Adicionar backend e banco: Supabase/Firebase.
+2. Sincronizar atendimento e cozinha em tempo real.
 3. Login por restaurante.
 4. Cardápio cadastrado com preços.
-5. Tela de cozinha separada.
-6. Integração oficial WhatsApp Business API ou fluxo semi-automático.
+5. Impressão ou painel dedicado de cozinha.
+6. Histórico e relatório de vendas.
