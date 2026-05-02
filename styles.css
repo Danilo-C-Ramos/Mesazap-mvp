@@ -41,6 +41,22 @@ form button, .primary { background: var(--accent); color: white; }
 .board-header { display: flex; justify-content: space-between; gap: 12px; align-items: center; margin-bottom: 14px; }
 .filters { display: flex; gap: 8px; flex-wrap: wrap; }
 .filter.active { background: var(--ink); color: white; }
+.menu-catalog { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; margin-bottom: 22px; }
+.menu-group { padding: 16px; }
+.menu-group h3, .orders-title { margin: 0 0 12px; }
+.menu-items { display: grid; gap: 8px; }
+.menu-item { display: flex; justify-content: space-between; gap: 10px; align-items: center; text-align: left; background: white; border: 1px solid var(--line); }
+.menu-item strong { color: var(--accent-dark); white-space: nowrap; }
+.selected-box { border: 1px solid var(--line); border-radius: 16px; padding: 12px; background: rgba(255,255,255,.55); }
+.section-title { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 10px; }
+.section-title h3 { margin: 0; font-size: 15px; }
+.small { padding: 7px 10px; font-size: 12px; }
+.cart-items { display: grid; gap: 8px; }
+.cart-row { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding: 9px; border: 1px solid var(--line); border-radius: 12px; background: white; }
+.cart-row span { display: block; color: var(--muted); font-size: 12px; margin-top: 2px; }
+.cart-actions { display: flex; gap: 5px; }
+.cart-actions button { padding: 6px 9px; min-width: 32px; }
+.empty-cart { margin: 0; }
 .orders { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 14px; }
 .order { padding: 16px; display: grid; gap: 12px; }
 .kitchen { padding: 20px; gap: 16px; }
@@ -73,5 +89,7 @@ form button, .primary { background: var(--accent); color: white; }
   .kitchen { padding: 12px; }
   .kitchen-header { align-items: flex-start; flex-direction: column; }
   .kitchen-columns { grid-template-columns: 1fr; }
+  .menu-catalog { grid-template-columns: 1fr; }
+  .cart-row { align-items: flex-start; flex-direction: column; }
   .form-card { position: static; }
 }

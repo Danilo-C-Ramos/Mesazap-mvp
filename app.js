@@ -1,6 +1,31 @@
 const STORAGE_KEY = 'mesazap.orders.v1';
 const statuses = ['Novo', 'Preparando', 'Pronto', 'Entregue'];
+const menuCatalog = [
+  { category: 'Cervejas 600ml', items: [
+    ['Heineken', 24], ['Amstel', 21], ['Original', 21], ['Corona', 24], ['Spaten', 21],
+  ]},
+  { category: 'Long necks e garrafas', items: [
+    ['Praya Lager (sem glúten)', 16], ['Heineken Long Neck', 15], ['Heineken Zero', 15], ['Amstel Long Neck', 13], ['Amstel Ultra', 13], ['Amstel Vibe’s', 12], ['Corona Cero', 16], ['Corona Long Neck', 16], ['Spaten Long Neck', 14], ['Stella', 14], ['Pure Gold', 14], ['Malzbier', 14], ['Smirnoff Ice', 17], ['Skol Beats', 16],
+  ]},
+  { category: 'Drinks clássicos', items: [
+    ['Caipirinha', 25], ['Caipiroska', 30], ['Saquerita', 35], ['Taça de Vinho', 20],
+  ]},
+  { category: 'Coquetéis da casa', items: [
+    ['Copacabana', 42], ['Ipanema', 40], ['Arpoador', 40], ['Leblon', 40], ['Negroni', 43],
+  ]},
+  { category: 'Doses', items: [
+    ['Whisky Black', 35], ['Whisky Red', 30], ['Jack Daniels', 32], ['Absolut', 27], ['Smirnoff', 18], ['Campari', 20], ['Licor 43', 40], ['Tequila', 29], ['Pituconha', 21], ['Cu de Burro', 10], ['Cachaça Artesanal', 18],
+  ]},
+  { category: 'Gin', items: [
+    ['Gin Tônica (Nacional)', 30], ['Gin Tônica (Importado)', 35], ['Tônica com Frutas (Nacional)', 35], ['Tônica com Frutas (Importado)', 40], ['Gin com Energético (Nacional)', 45], ['Gin com Energético (Importado)', 45],
+  ]},
+  { category: 'Batidas', items: [
+    ['Batida de Vinho', 33], ['Batida de Pinga', 34], ['Batida de Vodka', 36], ['Batida de Champagne', 37],
+  ]},
+];
+
 let orders = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
+let currentCart = [];
 let filter = 'all';
 let activeView = 'front';
 
@@ -10,6 +35,70 @@ const save = () => localStorage.setItem(STORAGE_KEY, JSON.stringify(orders));
 
 function orderMessage(order) {
   return `Pedido #${order.code}\nCliente: ${order.customer}\nTipo: ${order.type}\nItens:\n${order.items}\n\nTotal: ${money(order.total)}\nPagamento: ${order.payment}${order.notes ? `\nObs: ${order.notes}` : ''}\nStatus: ${order.status}`;
+}
+
+function renderMenu() {
+  const container = $('menuCatalog');
+  container.innerHTML = '';
+  for (const group of menuCatalog) {
+    const section = document.createElement('section');
+    section.className = 'menu-group card';
+    section.innerHTML = `<h3>${group.category}</h3><div class="menu-items"></div>`;
+    const list = section.querySelector('.menu-items');
+    for (const [name, price] of group.items) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'menu-item';
+      button.dataset.menuName = name;
+      button.dataset.menuPrice = price;
+      button.innerHTML = `<span>${name}</span><strong>${money(price)}</strong>`;
+      list.appendChild(button);
+    }
+    container.appendChild(section);
+  }
+}
+
+function cartTotal() {
+  return currentCart.reduce((sum, item) => sum + item.qty * item.price, 0);
+}
+
+function syncCartFields() {
+  $('items').value = currentCart.map(item => `${item.qty}x ${item.name} — ${money(item.price * item.qty)}`).join('\n');
+  $('total').value = cartTotal().toFixed(2);
+}
+
+function renderCart() {
+  const container = $('cartItems');
+  const empty = $('emptyCart');
+  container.innerHTML = '';
+  empty.hidden = currentCart.length > 0;
+  for (const item of currentCart) {
+    const row = document.createElement('div');
+    row.className = 'cart-row';
+    row.dataset.cartName = item.name;
+    row.innerHTML = `
+      <div><strong>${item.qty}x ${item.name}</strong><span>${money(item.price)} cada</span></div>
+      <div class="cart-actions">
+        <button type="button" data-cart-action="minus">−</button>
+        <button type="button" data-cart-action="plus">+</button>
+        <button type="button" data-cart-action="remove" class="danger">×</button>
+      </div>
+    `;
+    container.appendChild(row);
+  }
+  syncCartFields();
+}
+
+function addMenuItem(name, price) {
+  const existing = currentCart.find(item => item.name === name);
+  if (existing) existing.qty += 1;
+  else currentCart.push({ name, price: Number(price), qty: 1 });
+  renderCart();
+}
+
+function clearCart() {
+  currentCart = [];
+  renderCart();
 }
 
 function getVisibleOrders() {
@@ -104,6 +193,7 @@ $('orderForm').addEventListener('submit', (event) => {
   orders.push(order);
   save();
   event.target.reset();
+  clearCart();
   setView('kitchen');
   render();
 });
@@ -111,6 +201,29 @@ $('orderForm').addEventListener('submit', (event) => {
 document.addEventListener('click', async (event) => {
   const button = event.target.closest('button');
   if (!button) return;
+
+  if (button.classList.contains('menu-item')) {
+    addMenuItem(button.dataset.menuName, button.dataset.menuPrice);
+    return;
+  }
+
+  if (button.dataset.cartAction) {
+    const name = button.closest('.cart-row').dataset.cartName;
+    const item = currentCart.find(entry => entry.name === name);
+    if (!item) return;
+    if (button.dataset.cartAction === 'plus') item.qty += 1;
+    if (button.dataset.cartAction === 'minus') item.qty -= 1;
+    if (button.dataset.cartAction === 'remove' || item.qty <= 0) {
+      currentCart = currentCart.filter(entry => entry.name !== name);
+    }
+    renderCart();
+    return;
+  }
+
+  if (button.id === 'clearCart') {
+    clearCart();
+    return;
+  }
 
   if (button.classList.contains('tab')) {
     setView(button.dataset.view);
@@ -166,4 +279,6 @@ document.addEventListener('click', async (event) => {
   }
 });
 
+renderMenu();
+renderCart();
 render();

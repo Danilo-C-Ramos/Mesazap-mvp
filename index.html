@@ -39,8 +39,18 @@
             <option>Delivery</option>
           </select>
         </label>
+
+        <section class="selected-box">
+          <div class="section-title">
+            <h3>Itens selecionados</h3>
+            <button type="button" id="clearCart" class="small danger">Limpar</button>
+          </div>
+          <div id="cartItems" class="cart-items"></div>
+          <p id="emptyCart" class="subtitle empty-cart">Toque nos itens do cardápio para montar o pedido.</p>
+        </section>
+
         <label>Itens do pedido
-          <textarea id="items" rows="6" placeholder="1x Parmigiana\n2x Coca lata\nSem cebola" required></textarea>
+          <textarea id="items" rows="5" placeholder="Itens aparecem aqui automaticamente. Também dá para editar manualmente." required></textarea>
         </label>
         <div class="row">
           <label>Total R$
@@ -56,7 +66,7 @@
           </label>
         </div>
         <label>Observações para cozinha/atendimento
-          <input id="notes" placeholder="Ex: sem cebola, ponto da carne, sem talher" />
+          <input id="notes" placeholder="Ex: sem gelo, sem limão, ponto da carne" />
         </label>
         <button type="submit">Enviar para cozinha</button>
       </form>
@@ -64,7 +74,10 @@
 
     <section class="board">
       <div class="board-header">
-        <h2>Pedidos do atendimento</h2>
+        <div>
+          <h2>Cardápio e pedidos</h2>
+          <p class="subtitle">Toque em um item para adicionar ao pedido atual.</p>
+        </div>
         <div class="filters">
           <button class="filter active" data-filter="all">Todos</button>
           <button class="filter" data-filter="Novo">Novos</button>
@@ -72,6 +85,8 @@
           <button class="filter" data-filter="Pronto">Prontos</button>
         </div>
       </div>
+      <section id="menuCatalog" class="menu-catalog"></section>
+      <h2 class="orders-title">Pedidos do atendimento</h2>
       <div id="orders" class="orders"></div>
     </section>
   </main>

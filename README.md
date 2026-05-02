@@ -5,6 +5,7 @@ MVP simples para restaurante que hoje anota pedidos manualmente e precisa organi
 ## O que faz
 
 - Atendimento cadastra pedidos por cliente/mesa, tipo, itens, total, pagamento e observações.
+- Cardápio clicável de bebidas/drinks com preços; o total é calculado automaticamente.
 - Campo de WhatsApp removido da tela de registro para acelerar o lançamento.
 - Tela **Cozinha** com fila separada:
   - Novos
